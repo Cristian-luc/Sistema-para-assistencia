@@ -1,12 +1,662 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | CL Assistência</title>
+
+  <style>
+    :root {
+      --preto: #111111;
+      --preto-claro: #1c1c1c;
+      --dourado: #d4af37;
+      --dourado-claro: #f2d675;
+      --branco: #ffffff;
+      --fundo: #f4f5f7;
+      --cinza: #6b7280;
+      --borda: #e5e7eb;
+      --verde: #16a34a;
+      --azul: #2563eb;
+      --laranja: #f59e0b;
+      --vermelho: #dc2626;
+      --sombra: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--fundo);
+      color: var(--preto);
+      min-height: 100vh;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: 100vh;
+    }
+
+    /* MENU LATERAL */
+    .sidebar {
+      background: linear-gradient(180deg, var(--preto), var(--preto-claro));
+      color: var(--branco);
+      padding: 24px 18px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 24px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .logo-caixa {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--dourado-claro), var(--dourado));
+      color: var(--preto);
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .logo h1 {
+      font-size: 17px;
+      margin-bottom: 3px;
+    }
+
+    .logo span {
+      font-size: 12px;
+      color: #c7c7c7;
+    }
+
+    .menu {
+      display: grid;
+      gap: 8px;
+    }
+
+    .menu a {
+      color: #d1d5db;
+      text-decoration: none;
+      padding: 13px 14px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: 0.2s;
+    }
+
+    .menu a:hover,
+    .menu a.ativo {
+      background: rgba(212, 175, 55, 0.16);
+      color: var(--branco);
+    }
+
+    .menu a.ativo {
+      border-left: 3px solid var(--dourado);
+    }
+
+    .contato {
+      margin-top: 35px;
+      padding: 15px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.06);
+      color: #d1d5db;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    /* CONTEÚDO PRINCIPAL */
+    .principal {
+      min-width: 0;
+    }
+
+    .topo {
+      background: rgba(255, 255, 255, 0.94);
+      border-bottom: 1px solid var(--borda);
+      padding: 18px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .topo h2 {
+      font-size: 23px;
+      margin-bottom: 4px;
+    }
+
+    .topo p {
+      color: var(--cinza);
+      font-size: 13px;
+    }
+
+    .acoes-topo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .busca {
+      width: 230px;
+      border: 1px solid var(--borda);
+      border-radius: 11px;
+      padding: 10px 12px;
+      outline: none;
+    }
+
+    .busca:focus {
+      border-color: var(--dourado);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+    }
+
+    .botao {
+      border: 0;
+      padding: 11px 16px;
+      border-radius: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .botao:hover {
+      transform: translateY(-1px);
+    }
+
+    .botao-dourado {
+      background: linear-gradient(135deg, var(--dourado-claro), var(--dourado));
+      color: var(--preto);
+    }
+
+    .conteudo {
+      padding: 28px;
+    }
+
+    /* CARDS */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .card {
+      background: var(--branco);
+      border: 1px solid var(--borda);
+      border-radius: 16px;
+      box-shadow: var(--sombra);
+      padding: 20px;
+    }
+
+    .card-topo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .card-topo span {
+      color: var(--cinza);
+      font-size: 13px;
+    }
+
+    .icone {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: #fff8da;
+      font-size: 20px;
+    }
+
+    .card h3 {
+      font-size: 27px;
+      margin-bottom: 5px;
+    }
+
+    .card small {
+      color: var(--cinza);
+    }
+
+    /* ÁREA INFERIOR */
+    .grade-principal {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 18px;
+    }
+
+    .cabecalho-secao {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .cabecalho-secao h3 {
+      font-size: 17px;
+      margin-bottom: 4px;
+    }
+
+    .cabecalho-secao p {
+      color: var(--cinza);
+      font-size: 13px;
+    }
+
+    .link {
+      border: 0;
+      background: #f8fafc;
+      color: var(--preto);
+      padding: 8px 11px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    /* TABELA */
+    .tabela {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 650px;
+    }
+
+    th {
+      text-align: left;
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--borda);
+      color: var(--cinza);
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+
+    td {
+      padding: 14px 10px;
+      border-bottom: 1px solid var(--borda);
+      font-size: 14px;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .andamento {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .aguardando {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .concluido {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .entregue {
+      background: #e0e7ff;
+      color: #3730a3;
+    }
+
+    /* ATIVIDADES */
+    .atividades {
+      display: grid;
+      gap: 16px;
+    }
+
+    .atividade {
+      display: flex;
+      gap: 12px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--borda);
+    }
+
+    .atividade:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .ponto {
+      width: 10px;
+      height: 10px;
+      margin-top: 5px;
+      border-radius: 50%;
+      background: var(--dourado);
+      box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.17);
+      flex-shrink: 0;
+    }
+
+    .atividade strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .atividade span {
+      color: var(--cinza);
+      font-size: 12px;
+    }
+
+    /* RESPONSIVO */
+    @media (max-width: 1050px) {
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .grade-principal {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: relative;
+        height: auto;
+      }
+
+      .menu {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .topo {
+        padding: 16px 18px;
+        align-items: flex-start;
+        gap: 14px;
+      }
+
+      .acoes-topo {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .busca {
+        width: 180px;
+      }
+
+      .conteudo {
+        padding: 18px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .cards,
+      .menu {
+        grid-template-columns: 1fr;
+      }
+
+      .topo {
+        flex-direction: column;
+      }
+
+      .acoes-topo,
+      .busca,
+      .botao {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
+
 <body>
-    <h1>Olá meu projeto</h1>
-    
+  <div class="container">
+
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-caixa">CL</div>
+        <div>
+          <h1>CL Assistência</h1>
+          <span>Sistema de Gestão</span>
+        </div>
+      </div>
+
+      <nav class="menu">
+        <a href="#" class="ativo">🏠 Dashboard</a>
+        <a href="#">🧾 Ordens de Serviço</a>
+        <a href="#">👥 Clientes</a>
+        <a href="#">📦 Estoque</a>
+        <a href="#">💰 Financeiro</a>
+        <a href="#">⚙️ Configurações</a>
+      </nav>
+
+      <div class="contato">
+        <strong>CL Assistência Técnica</strong><br>
+        Celulares e notebooks<br>
+        WhatsApp: (62) 99195-0348
+      </div>
+    </aside>
+
+    <main class="principal">
+
+      <header class="topo">
+        <div>
+          <h2>Dashboard</h2>
+          <p id="dataAtual">Resumo geral da assistência técnica</p>
+        </div>
+
+        <div class="acoes-topo">
+          <input
+            type="text"
+            class="busca"
+            id="campoBusca"
+            placeholder="Buscar ordem ou cliente"
+          >
+          <button class="botao botao-dourado" onclick="novaOrdem()">
+            + Nova OS
+          </button>
+        </div>
+      </header>
+
+      <section class="conteudo">
+
+        <div class="cards">
+          <article class="card">
+            <div class="card-topo">
+              <span>Ordens abertas</span>
+              <div class="icone">🧾</div>
+            </div>
+            <h3>8</h3>
+            <small>Aguardando ou em andamento</small>
+          </article>
+
+          <article class="card">
+            <div class="card-topo">
+              <span>Serviços concluídos</span>
+              <div class="icone">✅</div>
+            </div>
+            <h3>24</h3>
+            <small>Concluídos neste mês</small>
+          </article>
+
+          <article class="card">
+            <div class="card-topo">
+              <span>Clientes cadastrados</span>
+              <div class="icone">👥</div>
+            </div>
+            <h3>57</h3>
+            <small>Total de clientes</small>
+          </article>
+
+          <article class="card">
+            <div class="card-topo">
+              <span>Faturamento mensal</span>
+              <div class="icone">💰</div>
+            </div>
+            <h3>R$ 3.480</h3>
+            <small>Receita no mês atual</small>
+          </article>
+        </div>
+
+        <div class="grade-principal">
+
+          <section class="card">
+            <div class="cabecalho-secao">
+              <div>
+                <h3>Ordens de serviço recentes</h3>
+                <p>Últimos atendimentos cadastrados</p>
+              </div>
+              <button class="link">Ver todas</button>
+            </div>
+
+            <div class="tabela">
+              <table>
+                <thead>
+                  <tr>
+                    <th>OS</th>
+                    <th>Cliente</th>
+                    <th>Aparelho</th>
+                    <th>Status</th>
+                    <th>Valor</th>
+                  </tr>
+                </thead>
+
+                <tbody id="tabelaOrdens">
+                  <tr>
+                    <td>#1025</td>
+                    <td>Marcos Silva</td>
+                    <td>iPhone 11</td>
+                    <td><span class="status andamento">Em andamento</span></td>
+                    <td>R$ 350,00</td>
+                  </tr>
+
+                  <tr>
+                    <td>#1024</td>
+                    <td>Ana Paula</td>
+                    <td>Samsung A23</td>
+                    <td><span class="status aguardando">Aguardando peça</span></td>
+                    <td>R$ 180,00</td>
+                  </tr>
+
+                  <tr>
+                    <td>#1023</td>
+                    <td>João Carlos</td>
+                    <td>Notebook Lenovo</td>
+                    <td><span class="status concluido">Concluído</span></td>
+                    <td>R$ 150,00</td>
+                  </tr>
+
+                  <tr>
+                    <td>#1022</td>
+                    <td>Fernanda Lima</td>
+                    <td>Redmi Note 13</td>
+                    <td><span class="status entregue">Entregue</span></td>
+                    <td>R$ 290,00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="cabecalho-secao">
+              <div>
+                <h3>Atividades recentes</h3>
+                <p>Últimas movimentações do sistema</p>
+              </div>
+            </div>
+
+            <div class="atividades">
+              <div class="atividade">
+                <div class="ponto"></div>
+                <div>
+                  <strong>Nova OS cadastrada</strong>
+                  <span>iPhone 11 de Marcos Silva — há 10 minutos</span>
+                </div>
+              </div>
+
+              <div class="atividade">
+                <div class="ponto"></div>
+                <div>
+                  <strong>Serviço concluído</strong>
+                  <span>Notebook Lenovo — há 1 hora</span>
+                </div>
+              </div>
+
+              <div class="atividade">
+                <div class="ponto"></div>
+                <div>
+                  <strong>Pagamento recebido</strong>
+                  <span>R$ 290,00 — Redmi Note 13</span>
+                </div>
+              </div>
+
+              <div class="atividade">
+                <div class="ponto"></div>
+                <div>
+                  <strong>Novo cliente cadastrado</strong>
+                  <span>Fernanda Lima — hoje</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const dataAtual = document.getElementById("dataAtual");
+    const campoBusca = document.getElementById("campoBusca");
+    const linhas = document.querySelectorAll("#tabelaOrdens tr");
+
+    const hoje = new Date();
+
+    dataAtual.textContent = hoje.toLocaleDateString("pt-BR", {
+      weekday: "long",
+      day: "2-digit",
+      month: "long",
+      year: "numeric"
+    });
+
+    campoBusca.addEventListener("input", function () {
+      const termo = this.value.toLowerCase().trim();
+
+      linhas.forEach(function (linha) {
+        const texto = linha.textContent.toLowerCase();
+        linha.style.display = texto.includes(termo) ? "" : "none";
+      });
+    });
+
+    function novaOrdem() {
+      alert("Aqui você poderá abrir o formulário de uma nova Ordem de Serviço.");
+    }
+  </script>
 </body>
 </html>
